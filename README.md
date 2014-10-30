@@ -20,6 +20,9 @@ Makes it easy to integrate Google Analytics by injecting necessary javascript in
 ### [Fröjd - Splash](https://github.com/Frojd/WP-Plugins/tree/develop/frojd-splash)
 Splash is a campaign (or banner if you will) custom post type that you can attach to selected post types using drag and drop.
 
+### [Fröjd - Sitemap & SEO](https://github.com/Frojd/WP-Plugins/tree/develop/frojd-sitemap-seo)
+Sitemap & SEO lets control of your robots.txt and sitemap, it also gives you the ability to specify site description and keywords.
+
 ## Contributing
 To contribute, create a pull request with your plugin and a description to what it does.
 
