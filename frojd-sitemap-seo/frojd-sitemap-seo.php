@@ -108,7 +108,7 @@ class SitemapSeo {
     }
 
     public function doMetaBoxesHook() {
-        foreach ($this->supported_types as $screen) {
+        foreach ($this->supportedTypes as $screen) {
             add_meta_box(
                 self::SEO_KEYWORDS_FIELD,
                 __('SEO keywords', 'sitemap-seo'),
@@ -123,7 +123,7 @@ class SitemapSeo {
     public function savePostHook() {
         global $post;
 
-        if (! in_array($post->post_type, $this->supported_types)) {
+        if (! in_array($post->post_type, $this->supportedTypes)) {
             return;
         }
 
@@ -147,9 +147,9 @@ class SitemapSeo {
 
         // Add the field with the names and function to use for our new
         // settings, put it in our new section
-        add_settings_field('seoSettingDescription',
+        add_settings_field('seo_setting_description',
             'Site description',
-            array($this, 'seoSettingDescription_callback'),
+            array($this, 'seoSettingDescriptionCallback'),
             'general',
             'seo_setting_section');
 
@@ -167,7 +167,7 @@ class SitemapSeo {
 
         // Register our setting so that $_POST handling is done for us and
         // our callback function just has to echo the <input>
-        register_setting('general', 'seoSettingDescription');
+        register_setting('general', 'seo_setting_description');
         register_setting('general', 'seo_setting_keywords_enabled');
         register_setting('general', 'seo_setting_keywords');
     }
@@ -205,26 +205,26 @@ class SitemapSeo {
             return "";
         }
 
-        $sitemap_settings = implode(',', $_POST['sitemap_settings']);
-        return $sitemap_settings;
+        $sitemapSettings = implode(',', $_POST['sitemap_settings']);
+        return $sitemapSettings;
     }
 
     public function robotsTxtSitemapSettingsHtml() {
         $sitemapPostTypes = get_option('sitemap_settings', '');
         $sitemapPostTypes = explode(',', $sitemapPostTypes);
-        $post_types = get_post_types(array( 'show_ui' => true ), 'objects');
+        $postTypes = get_post_types(array( 'show_ui' => true ), 'objects');
 
         echo '<select id="sitemap_settings" name="sitemap_settings[]" multiple>';
-        foreach($post_types as $post_type) {
+        foreach($postTypes as $postType) {
             $selected = false;
 
-            if (array_search($post_type->name, $sitemapPostTypes, true) !== false) {
+            if (array_search($postType->name, $sitemapPostTypes, true) !== false) {
                 $selected = true;
             }
 
-            echo '<option value="'.$post_type->name.'"'
+            echo '<option value="'.$postType->name.'"'
                 .($selected ? 'selected' : '').'>'
-                .$post_type->labels->name
+                .$postType->labels->name
                 .'</option>';
         }
         echo '</select>';
@@ -241,10 +241,10 @@ class SitemapSeo {
         echo '<p>Site description is used as meta description on the front page.</p>';
     }
 
-    public function seoSettingDescription_callback() {
-        echo sprintf('<textarea name="seoSettingDescription"
-            id="seoSettingDescription" class="large-text code">%s</textarea>',
-            get_option('seoSettingDescription')
+    public function seoSettingDescriptionCallback() {
+        echo sprintf('<textarea name="seo_setting_description"
+            id="seo_setting_description" class="large-text code">%s</textarea>',
+            get_option('seo_setting_description')
         );
     }
 

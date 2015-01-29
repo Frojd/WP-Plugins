@@ -13,18 +13,17 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>';
         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <?php
-global $blog_id;
 
-$sitemapSettings = get_option('sitemapSettings', '');
+$sitemapSettings = get_option('sitemap_settings', '');
 $sitemapSettings = explode(',', $sitemapSettings);
 
-$query_args = array(
+$queryArgs = array(
     'post_type'   => $sitemapSettings,
     'post_status' => 'publish',
     'orderby'     => 'date',
     'posts_per_page' => -1
 );
-query_posts($query_args);
+query_posts($queryArgs);
 
 if (have_posts()) : while (have_posts()) : the_post();
 ?>
