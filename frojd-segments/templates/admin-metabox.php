@@ -12,17 +12,20 @@
         <?php if(!empty($availableArticles)) : ?>
             <ul class="sortable" data-parent-post-id="<?php echo $postId; ?>">
                 <?php foreach ($currentArticles as $article) : ?>
-                    <li data-post-id="<?php echo $article->post_id; ?>">
-                        <header>
-                            <?php echo get_the_title($article->post_id); ?>
-                            <?php if (get_post_status($article->post_id) == 'trash') : ?>
-                                <span class="post-notice">(<?php _e('Notice: This post has been moved to the trash!'); ?>)</span>
-                                <a class="edit" href="edit.php?post_status=trash&post_type=post" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
-                            <?php else : ?>
-                                <a class="edit" href="post.php?post=<?php echo $article->post_id; ?>&action=edit" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
-                            <?php endif; ?>
-                        </header>
-                    </li>
+                    <?php $postStatus = get_post_status($article->post_id); ?>
+                    <?php if($postStatus) : ?>
+                        <li data-post-id="<?php echo $article->post_id; ?>">
+                            <header>
+                                <?php echo get_the_title($article->post_id); ?>
+                                <?php if($postStatus == 'trash') : ?>
+                                    <span class="post-notice">(<?php _e('Notice: This post has been moved to the trash!'); ?>)</span>
+                                    <a class="edit" href="edit.php?post_status=trash&post_type=post" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
+                                <?php else : ?>
+                                    <a class="edit" href="post.php?post=<?php echo $article->post_id; ?>&action=edit" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
+                                <?php endif; ?>
+                            </header>
+                        </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
         <?php else : ?>

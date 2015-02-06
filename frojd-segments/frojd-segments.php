@@ -37,8 +37,8 @@ class Segments {
         register_deactivation_hook(__FILE__, array(&$this, 'deactivationHook'));
         register_uninstall_hook(__FILE__, array(get_class(), 'uninstallHook'));
 
-        // Set the translation domain, either the theme or plugin
-        $this->translationDomain = $this->getTranslationDomain();
+        // Set the translation domain
+        $this->translationDomain = $this->pluginRelBase;
 
         // Enqueue scripts and style
         add_action('admin_enqueue_scripts', array($this, 'adminEnqueueScriptsHook'));
@@ -47,7 +47,11 @@ class Segments {
         add_action('save_post', array($this, 'savePostHook'));
 
         // Action for creating segment metaboxes
-        add_action('frojd_segments_metabox', array($this, 'frojdSegmentsMetaboxHook'));
+        add_action('frojd_segments_add_metaboxes', array($this, 'frojdSegmentsAddMetaboxesHook'));
+
+        // Filter for returning segments
+        add_filter('frojd_segments_get_segment', array($this, 'frojdSegmentsGetSegmentHook'), 10, 2);
+        add_filter('frojd_segments_get_segments', array($this, 'frojdSegmentsGetSegmentsHook'), 10, 1);
     }
 
     public static function getInstance() {
@@ -114,7 +118,7 @@ class Segments {
     /*
      * Action hook for adding segments metabox to edit view
      */
-    public function frojdSegmentsMetaboxHook($metaboxes) {
+    public function frojdSegmentsAddMetaboxesHook($metaboxes) {
         foreach($metaboxes as $id => $metabox) {
             $postTypes = array('page');
             if(isset($metabox['show_on']['post_types'])) {
@@ -138,6 +142,21 @@ class Segments {
                 }
             }
         }
+    }
+
+    public function frojdSegmentsGetSegmentHook($postId, $metabox) {
+        $options = get_post_meta($postId, 'frojd_segments_metabox_' . $metabox, true);
+        return json_decode($options);
+    }
+
+    public function frojdSegmentsGetSegmentsHook($postId) {
+        $metaboxes = get_post_meta($postId, 'frojd_segments_metaboxes', true);
+        $segments = array();
+        foreach($metaboxes as $metabox) {
+            $segment = $this->frojdSegmentsGetSegmentHook($postId, $metabox);
+            $segments[$metabox] = $segment;
+        }
+        return $segments;
     }
 
     /*------------------------------------------------------------------------*
@@ -239,13 +258,6 @@ class Segments {
         } else {
             echo '<p>Rendering of template failed</p>';
         }
-    }
-
-    private function getTranslationDomain() {
-        if(function_exists('get_translation_domain')) {
-            return get_translation_domain();
-        }
-        return $this->pluginRelBase;
     }
 }
 
