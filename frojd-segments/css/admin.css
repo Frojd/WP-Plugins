@@ -84,6 +84,14 @@
     opacity: 1;
 }
 
+.articles .post-format-icon {
+    margin: 0;
+}
+.articles .post-format-icon:before {
+    color: #aaaaaa;
+    font-size: 18px !important;
+}
+
 .article-filter {
     border:1px solid #cccccc;
     background: #dfdfdf;

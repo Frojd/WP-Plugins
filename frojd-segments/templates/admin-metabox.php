@@ -12,10 +12,16 @@
         <?php if(!empty($availableArticles)) : ?>
             <ul class="sortable" data-parent-post-id="<?php echo $postId; ?>">
                 <?php foreach ($currentArticles as $article) : ?>
-                    <?php $postStatus = get_post_status($article->post_id); ?>
+                    <?php 
+                        $postStatus = get_post_status($article->post_id);
+                        $postFormat = get_post_format($article->post_id);
+                    ?>
                     <?php if($postStatus) : ?>
                         <li data-post-id="<?php echo $article->post_id; ?>">
                             <header>
+                                <?php if(!empty($postFormat)) : ?>
+                                    <span class="post-state-format post-format-icon post-format-<?php echo $postFormat; ?>"></span>
+                                <?php endif; ?>
                                 <?php echo get_the_title($article->post_id); ?>
                                 <?php if($postStatus == 'trash') : ?>
                                     <span class="post-notice">(<?php _e('Notice: This post has been moved to the trash!'); ?>)</span>
