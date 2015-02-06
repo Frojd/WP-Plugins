@@ -63,7 +63,6 @@ class Segments {
      *------------------------------------------------------------------------*/
 
     public function activationHook($networkWide) {
-        $this->createTable();
     }
 
     public function deactivationHook($networkWide) {
