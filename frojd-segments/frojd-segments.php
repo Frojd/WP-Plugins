@@ -152,9 +152,11 @@ class Segments {
     public function frojdSegmentsGetSegmentsHook($postId) {
         $metaboxes = get_post_meta($postId, 'frojd_segments_metaboxes', true);
         $segments = array();
-        foreach($metaboxes as $metabox) {
-            $segment = $this->frojdSegmentsGetSegmentHook($postId, $metabox);
-            $segments[$metabox] = $segment;
+        if(!empty($metaboxes)) {
+            foreach($metaboxes as $metabox) {
+                $segment = $this->frojdSegmentsGetSegmentHook($postId, $metabox);
+                $segments[$metabox] = $segment;
+            }
         }
         return $segments;
     }
