@@ -110,9 +110,17 @@
         var list = '';
         $.each(items, function(key, val) {
             var item = items[key];
+            var post_format = '';
+            if(item.post_format) {
+                post_format = '<span class="post-state-format post-format-icon post-format-' + item.post_format + '"></span> ';
+            }
             list += [
                 '<li data-post-id="'+ item.ID +'" data-title="'+ item.post_title +'">',
-                    '<header>'+ item.post_title +'<a class="edit" href="post.php?post='+ item.ID +'&action=edit" title="Edit" alt="Edit"></a></header>',
+                '<header>',
+                post_format,
+                item.post_title,
+                '<a class="edit" href="post.php?post='+ item.ID +'&action=edit" title="Edit" alt="Edit"></a>',
+                '</header>',
                 '</li>'
             ].join('');
         });

@@ -176,6 +176,10 @@ class Segments {
         // Get the avialable articles to be able to choose from
         $availableArticles = $this->getArticles($post->ID, $override);
 
+        foreach($availableArticles as $i => $article) {
+            $availableArticles[$i]->post_format = get_post_format($article->ID);
+        }
+
         // Get the current metabox data and merge with other data
         $options = get_post_meta($post->ID, 'frojd_segments_metabox_' . $metabox['id'], true);
         $segment = json_decode($options);
