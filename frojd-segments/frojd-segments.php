@@ -13,6 +13,7 @@
  * Version: 1.0
  * Author: Fröjd - Sara Öjelind
  * Author URI: http://frojd.se
+ * Text Domain: frojd-segments
  * License: Fröjd Interactive AB (All Rights Reserved).
  */
 
@@ -39,6 +40,8 @@ class Segments {
 
         // Set the translation domain
         $this->translationDomain = $this->pluginRelBase;
+
+        add_action('plugins_loaded', array($this, 'pluginsLoadedHook'));
 
         // Enqueue scripts and style
         add_action('admin_enqueue_scripts', array($this, 'adminEnqueueScriptsHook'));
@@ -76,6 +79,10 @@ class Segments {
         if (! defined('WP_UNINSTALL_PLUGIN')) {
             die();
         }
+    }
+
+    public function pluginsLoadedHook() {
+        load_plugin_textdomain($this->translationDomain, false, dirname(plugin_basename( __FILE__ )) . '/languages');
     }
 
     public function adminEnqueueScriptsHook($page) {
