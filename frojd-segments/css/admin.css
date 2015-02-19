@@ -70,9 +70,6 @@
     color:#ffffff;
     font-weight: bold;
 }
-.articles ul.sortable li:not(.ui-draggable-dragging) {
-    width: 100% !important;
-}
 .articles .edit {
     width: 16px;
     height: 16px;
