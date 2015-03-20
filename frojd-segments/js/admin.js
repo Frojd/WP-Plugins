@@ -72,7 +72,7 @@
             });
 
             $this.find('.articles-title-field').keyup(function () {
-                update_list($this);
+                update_list($this.find('.articles .sortable'));
             });
         });
 
