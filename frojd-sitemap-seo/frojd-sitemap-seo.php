@@ -134,6 +134,10 @@ class SitemapSeo {
     public function savePostHook() {
         global $post;
 
+        if (! isset($post)) {
+            return;
+        }
+
         if (! in_array($post->post_type, $this->supportedTypes)) {
             return;
         }
