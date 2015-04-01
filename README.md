@@ -23,6 +23,9 @@ Splash is a campaign (or banner if you will) custom post type that you can attac
 ### [Fröjd - Sitemap & SEO](https://github.com/Frojd/WP-Plugins/tree/develop/frojd-sitemap-seo)
 Sitemap & SEO lets control of your robots.txt and sitemap, it also gives you the ability to specify site description and keywords.
 
+### [Fröjd - Segments](https://github.com/Frojd/WP-Plugins/tree/master/frojd-segments)
+Plugin to handle segment metaboxes where the editor can drag'n'drop articles from a list of available articles, into a sorted list which then can be used in different ways in the theme. This functionality is mainly built from a "featured articles" point of view where the editor can e.g. select related articles for a specific article.
+
 ## Contributing
 To contribute, create a pull request with your plugin and a description to what it does.
 
