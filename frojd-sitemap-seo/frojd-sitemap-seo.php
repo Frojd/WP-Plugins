@@ -10,7 +10,7 @@
  * Plugin Name: Fröjd - Sitemap & SEO
  * Plugin URI: http://frojd.se
  * Description: This plugin allows you to edit the robots.txt file and choose which post types to be included in the sitemap. It also allows you to specify a couple of seo fields, such as site description and keywords.
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: Fröjd
  * Author URI: http://frojd.se
  * License: Fröjd Interactive AB (All Rights Reserved).
