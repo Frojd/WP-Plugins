@@ -10,7 +10,7 @@
  * Plugin Name: Fröjd - Sitemap & SEO
  * Plugin URI: http://frojd.se
  * Description: This plugin allows you to edit the robots.txt file and choose which post types to be included in the sitemap. It also allows you to specify a couple of seo fields, such as site description and keywords.
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: Fröjd
  * Author URI: http://frojd.se
  * License: Fröjd Interactive AB (All Rights Reserved).
@@ -19,6 +19,7 @@
 class SitemapSeo {
     const VERSION = '1.2.1';
     const SEO_KEYWORDS_FIELD = 'seo_post_keywords';
+    const SEO_DESCRIPTION_FIELD = 'seo_post_description';
 
     protected $pluginSlug = 'sitemap_seo';
     protected static $instance = null;
@@ -110,6 +111,15 @@ class SitemapSeo {
     public function doMetaBoxesHook() {
         foreach ($this->supportedTypes as $screen) {
             add_meta_box(
+                self::SEO_DESCRIPTION_FIELD,
+                __('SEO description', 'sitemap-seo'),
+                array($this, 'seoPostDescriptionMetabox'),
+                $screen,
+                'normal',
+                'default'
+            );
+
+            add_meta_box(
                 self::SEO_KEYWORDS_FIELD,
                 __('SEO keywords', 'sitemap-seo'),
                 array($this, 'seoPostKeywordsMetabox'),
@@ -120,8 +130,13 @@ class SitemapSeo {
         }
     }
 
+
     public function savePostHook() {
         global $post;
+
+        if (! isset($post)) {
+            return;
+        }
 
         if (! in_array($post->post_type, $this->supportedTypes)) {
             return;
@@ -131,7 +146,14 @@ class SitemapSeo {
             update_post_meta($post->ID, self::SEO_KEYWORDS_FIELD,
                 $_POST[self::SEO_KEYWORDS_FIELD]);
         }
+
+        if (isset($_POST[self::SEO_DESCRIPTION_FIELD])) {
+            update_post_meta($post->ID, self::SEO_DESCRIPTION_FIELD,
+                $_POST[self::SEO_DESCRIPTION_FIELD]);
+        }
     }
+
+
 
     /*------------------------------------------------------------------------*
      * Public
@@ -270,6 +292,18 @@ class SitemapSeo {
         echo sprintf('<textarea id="%1$s" name="%1$s"
             class="custom-text-field large-text">%2$s</textarea>',
             self::SEO_KEYWORDS_FIELD,
+            $value
+        );
+   }
+
+   public function seoPostDescriptionMetabox() {
+        global $post;
+
+        $value = get_post_meta($post->ID, self::SEO_DESCRIPTION_FIELD, true);
+
+        echo sprintf('<textarea id="%1$s" name="%1$s"
+            class="custom-text-field large-text">%2$s</textarea>',
+            self::SEO_DESCRIPTION_FIELD,
             $value
         );
    }
