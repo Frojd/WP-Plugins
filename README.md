@@ -26,6 +26,9 @@ Sitemap & SEO lets control of your robots.txt and sitemap, it also gives you the
 ### [Fröjd - Segments](https://github.com/Frojd/WP-Plugins/tree/master/frojd-segments)
 Plugin to handle segment metaboxes where the editor can drag'n'drop articles from a list of available articles, into a sorted list which then can be used in different ways in the theme. This functionality is mainly built from a "featured articles" point of view where the editor can e.g. select related articles for a specific article.
 
+### [Fröjd - Image Menu](https://github.com/Frojd/WP-Plugins/tree/master/frojd-image-menu)
+This plugin allows you to associate images to menu items.
+
 ## Contributing
 To contribute, create a pull request with your plugin and a description to what it does.
 
