@@ -29,7 +29,7 @@ function addMetaBoxesHook() {
             )
         )
     );
-    do_action('frojd_segments_metabox', $metaboxes);
+    do_action('frojd_segments_add_metaboxes', $metaboxes);
 }
 ```
 
