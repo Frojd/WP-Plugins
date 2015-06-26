@@ -17,9 +17,9 @@
  * License: Fröjd Interactive AB (All Rights Reserved).
  */
 
-namespace Frojd\Plugin\Segments;
+namespace Frojd\Plugin\FrojdSegments;
 
-class Segments {
+class FrojdSegments {
     const VERSION = '1.0';
 
     protected $pluginSlug = 'segments';
@@ -28,7 +28,7 @@ class Segments {
     protected $pluginBase;
     protected $pluginRelBase;
 
-    protected $translationDomain;
+    protected $translationDomain = 'frojd-segments';
 
     public function __construct() {
         $this->pluginBase = rtrim(dirname(__FILE__), '/');
@@ -55,6 +55,11 @@ class Segments {
         // Filter for returning segments
         add_filter('frojd_segments_get_segment', array($this, 'frojdSegmentsGetSegmentHook'), 10, 2);
         add_filter('frojd_segments_get_segments', array($this, 'frojdSegmentsGetSegmentsHook'), 10, 1);
+
+        // Filters for editing articles drag content
+        add_action('frojd_segments_article_show_drag_content', array($this, 'frojdSegmentsArticleShowDragContent'), 10, 1);
+        add_filter('frojd_segments_article_show_post_format', array($this, 'frojdSegmentsArticleShowPostFormat'), 10, 1);
+        add_filter('frojd_segments_article_show_edit_button', array($this, 'frojdSegmentsArticleShowEditButton'), 10, 1);
     }
 
     public static function getInstance() {
@@ -152,8 +157,8 @@ class Segments {
     }
 
     public function frojdSegmentsGetSegmentHook($postId, $metabox) {
-        $options = get_post_meta($postId, 'frojd_segments_metabox_' . $metabox, true);
-        return json_decode($options);
+        $data = get_post_meta($postId, 'frojd_segments_metabox_' . $metabox, true);
+        return json_decode($data);
     }
 
     public function frojdSegmentsGetSegmentsHook($postId) {
@@ -166,6 +171,31 @@ class Segments {
             }
         }
         return $segments;
+    }
+
+    public function frojdSegmentsArticleShowDragContent($postId) {
+        do_action('frojd_segments_article_show_post_format', $postId);
+        
+        echo '<div class="post-title">' . get_the_title($postId) . '</div>';
+
+        do_action('frojd_segments_article_show_edit_button', $postId);
+    }
+
+    public function frojdSegmentsArticleShowPostFormat($postId) {
+        $postFormat = get_post_format($postId);
+        if(!empty($postFormat)) : ?>
+            <div class="post-state-format post-format-icon post-format-<?php echo $postFormat; ?>"></div>
+        <?php endif;
+    }
+
+    public function frojdSegmentsArticleShowEditButton($postId) {
+        $postStatus = get_post_status($postId);
+        if($postStatus == 'trash') : ?>
+            <span class="post-notice">(<?php _e('Notice: This post has been moved to the trash!', $this->translationDomain); ?>)</span>
+            <a class="edit dashicons dashicons-edit" href="edit.php?post_status=trash&post_type=post" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
+        <?php else : ?>
+            <a class="edit dashicons dashicons-edit" href="post.php?post=<?php echo $postId; ?>&action=edit" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
+        <?php endif;
     }
 
     /*------------------------------------------------------------------------*
@@ -185,16 +215,22 @@ class Segments {
         if($availableArticles) {
             foreach($availableArticles as $i => $article) {
                 $availableArticles[$i]->post_format = get_post_format($article->ID);
+                $availableArticles[$i]->timestamp = get_the_time('U', $article->ID);
             }
         }
 
         // Get the current metabox data and merge with other data
-        $options = get_post_meta($post->ID, 'frojd_segments_metabox_' . $metabox['id'], true);
-        $segment = json_decode($options);
+        $data = get_post_meta($post->ID, 'frojd_segments_metabox_' . $metabox['id'], true);
+        $segment = json_decode($data);
 
         $currentArticles = array();
         if(!empty($segment->posts)) {
             $currentArticles = $segment->posts;
+        }
+
+        $options = array();
+        if(isset($metabox['args']['options'])) {
+            $options = $metabox['args']['options'];
         }
 
         $templateVars = array(
@@ -203,9 +239,10 @@ class Segments {
             'title'             => !empty($segment->title) ? $segment->title : '',
             'order'             => !empty($segment->order) ? $segment->order : '0',
             'postType'          => get_post_type($post->ID),
-            'options'           => $options,
+            'data'              => $data,
             'availableArticles' => $availableArticles,
-            'currentArticles'   => $currentArticles
+            'currentArticles'   => $currentArticles,
+            'options'           => $options
         );
         $this->renderTemplate('admin-metabox', $templateVars);
     }
@@ -275,4 +312,4 @@ class Segments {
     }
 }
 
-Segments::getInstance();
+FrojdSegments::getInstance();
