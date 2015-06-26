@@ -1,0 +1,22 @@
+/**
+ * Example of how an admin css file can change the appearance of the items in selected list when options have been added.
+ */
+
+ /* Grid styling */
+.segments_metabox .articles li[data-layout=full] {
+    width: 100%;
+}
+.segments_metabox .articles li[data-layout=half] {
+    width: 50%;
+}
+.segments_metabox .articles li[data-layout=quarter] {
+    width: 25%;
+}
+.segments_metabox .articles li[data-layout=quarter] {
+    width: 25%;
+}
+
+/* Featured styling */
+.segments_metabox .articles li[data-featured=on] header {
+    background: green;
+}
