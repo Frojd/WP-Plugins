@@ -1,0 +1,3 @@
+[submodule "Frojd-Segments"]
+	path = Frojd-Segments
+	url = git://github.com/Frojd/Frojd-Segments.git

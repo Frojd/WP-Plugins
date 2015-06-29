@@ -63,17 +63,28 @@
 
                 switch (sort_by){
                     case 'title':
-                        $draggable.find('li').sort(sort_by_title).appendTo($draggable);
+                        $draggable.find('li:not(.empty)').sort(sort_by_title).appendTo($draggable);
                         break;
                     case 'date':
-                        $draggable.find('li').sort(sort_by_date).appendTo($draggable);
+                        $draggable.find('li:not(.empty)').sort(sort_by_date).appendTo($draggable);
                         break;
                 }
             });
 
-            $this.find('.articles-title-field').keyup(function () {
+            $metabox.find('.articles-title-field').keyup(function () {
                 update_list($this.find('.articles .sortable'));
             });
+
+            $metabox.find('.articles.articles-selected .sortable .options:not(.active) .dashicons').click(function(e) {
+                $(this).parents('li').siblings('li.segment-item').find('.options').removeClass('active');
+                $(this).parents('.options').addClass('active');
+            });
+
+            $metabox.find('.articles.articles-selected .sortable .options .close').click(function() {
+                $(this).parents('.options').removeClass('active');
+            });
+
+            $metabox.find('.articles.articles-selected .sortable .options .save-options').click(save_options);
         });
 
     });
@@ -91,10 +102,14 @@
         $metabox.find('.articles.articles-selected li').each(function( index ) {
             var $this = $(this);
             if ($this.attr('data-post-id') !== undefined) {
-                list.posts.push({
+                var item = {
                     post_id: $this.attr('data-post-id'), 
                     sorting: index
-                });
+                };
+                if($this.attr('data-options')) {
+                    item.options = typeof($this.attr('data-options')) !== 'undefined' && $this.attr('data-options') !== '' ? JSON.parse($this.attr('data-options')) : ''
+                }
+                list.posts.push(item);
             }
         });
 
@@ -103,29 +118,28 @@
 
     function update_list($container) {
         var metabox = get_list($container.parents('.segments_metabox'));
-        $container.parents('.articles').find('.articles-options-field').addClass('changed').val(metabox);
+        $container.parents('.articles').find('.articles-data-field').addClass('changed').val(metabox);
     }
 
     function create_list($container, items) {
         var list = '';
+        var $empty = $container.find('.empty');
+
+        $container.find('.articles .draggable li:not(.empty)').remove();
         $.each(items, function(key, val) {
             var item = items[key];
-            var post_format = '';
-            if(item.post_format) {
-                post_format = '<span class="post-state-format post-format-icon post-format-' + item.post_format + '"></span> ';
-            }
-            list += [
-                '<li data-post-id="'+ item.ID +'" data-title="'+ item.post_title +'">',
-                '<header>',
-                post_format,
-                item.post_title,
-                '<a class="edit" href="post.php?post='+ item.ID +'&action=edit" title="Edit" alt="Edit"></a>',
-                '</header>',
-                '</li>'
-            ].join('');
-        });
+            var $item = $empty.clone().removeClass('empty');
 
-        $container.find('.articles .draggable').html($(list));
+            $item.attr('data-post-id', item.ID).attr('data-title', item.post_title).attr('data-timestamp', item.timestamp);
+
+            if(item.post_format) {
+                $item.find('.post-state-format').addClass('post-format-icon').addClass('post-format-' + item.post_format).show();
+            }
+
+            $item.find('.post-title').text(item.post_title).attr('title', item.post_title);
+            $item.find('.edit').attr('href', 'post.php?action=edit&post=' + item.ID);
+            $container.find('.articles .draggable').append($item);
+        });
 
         $container.find('.articles .draggable li').draggable({
             tolerance: 'point',
@@ -133,8 +147,24 @@
             snap: false,
             addClasses: false,
             helper: function() {
+                var $clone = $(this).clone();
                 /* Set the width of the helper clone to match the container */
-                return $(this).clone().css('width', $(this).width() + 'px');
+                $clone.css('width', $('.articles .draggable').width() + 'px');
+
+                $clone.addClass('segment-item');
+
+                $clone.find('.options').click(function() {
+                    $(this).find('.options-lightbox').addClass('active');
+                });
+
+                $clone.find('.options .save-options').click(save_options);
+                return $clone;
+            },
+            stop: function () {
+                $('.articles .sortable .segment-item').css({
+                    width: '',
+                    height: ''
+                });
             }
         });
     }
@@ -144,7 +174,7 @@
     }
 
     function sort_by_date(a, b) {
-        return $(a).attr('data-timestamp').toLowerCase() < $(b).attr('data-timestamp').toLowerCase() ? 1 : -1;
+        return $(a).attr('data-timestamp') < $(b).attr('data-timestamp') ? 1 : -1;
     }
 
     function filter_and_recreate_list($container, items) {
@@ -159,6 +189,34 @@
         });
 
         create_list($container, filtered);
+    }
+
+    function save_options(e) {
+        e.preventDefault();
+
+        var $lightbox = $(this).parents('.options-lightbox');
+        var options = {};
+
+        var $item = $lightbox.parents('li.segment-item');
+
+        $lightbox.find('.option').each(function() {
+            var $this = $(this);
+            var option = $this.attr('data-option');
+            var value = $this.find('input, select').val();
+            if($this.find('input[type=checkbox]').length) {
+                if(!$this.find('input:checked').length) {
+                    value = '';
+                }
+            }
+            $item.attr('data-' + option, value);
+            options[option] = value;
+        });
+
+        $item.attr('data-options', JSON.stringify(options));
+
+        $lightbox.parents('.options').removeClass('active');
+
+        update_list($item.parents('.sortable'));
     }
 
 }(jQuery));

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Fröjd Segments\n"
-"POT-Creation-Date: 2015-02-10 15:28+0100\n"
-"PO-Revision-Date: 2015-02-10 15:40+0100\n"
+"POT-Creation-Date: 2015-06-26 16:33+0100\n"
+"PO-Revision-Date: 2015-06-26 16:33+0100\n"
 "Last-Translator: \n"
 "Language-Team: Fröjd Interactive AB <info@frojd.se>\n"
 "Language: sv_SE\n"
@@ -14,34 +14,59 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
+#: ../frojd-segments.php:194
+msgid "Notice: This post has been moved to the trash!"
+msgstr "Varning: Denna artikel har flyttats till papperskorgen!"
+
+#: ../frojd-segments.php:195 ../frojd-segments.php:197
+#: ../templates/admin-metabox.php:84
+msgid "Edit"
+msgstr "Redigera"
+
+#: ../examples/grid-segment/functions.php:17
+msgid "Select blurbs"
+msgstr ""
+
+#: ../examples/grid-segment/functions.php:34
+msgid "Grid"
+msgstr ""
+
+#: ../examples/grid-segment/functions.php:43
+msgid "Featured"
+msgstr ""
+
+#: ../templates/admin-metabox-options.php:5
+msgid "Select options"
+msgstr "Välj inställningar"
+
+#: ../templates/admin-metabox-options.php:6
+msgid "Close"
+msgstr "Stäng"
+
+#: ../templates/admin-metabox-options.php:53
+msgid "Save"
+msgstr "Spara"
+
 #: ../templates/admin-metabox.php:5
 msgid "Title"
 msgstr "Rubrik"
 
-#: ../templates/admin-metabox.php:27
-msgid "Notice: This post has been moved to the trash!"
-msgstr "Varning: Denna artikel har flyttats till papperskorgen!"
-
-#: ../templates/admin-metabox.php:28 ../templates/admin-metabox.php:30
-msgid "Edit"
-msgstr "Redigera"
-
-#: ../templates/admin-metabox.php:38
+#: ../templates/admin-metabox.php:53
 msgid "No relevant articles available"
 msgstr "Det finns inga relevanta artiklar"
 
-#: ../templates/admin-metabox.php:46
+#: ../templates/admin-metabox.php:61
 msgid "Search"
 msgstr "Sök"
 
-#: ../templates/admin-metabox.php:50
+#: ../templates/admin-metabox.php:65
 msgid "Order by"
 msgstr "Sortera på"
 
-#: ../templates/admin-metabox.php:51
+#: ../templates/admin-metabox.php:66
 msgid "Name"
 msgstr "Namn"
 
-#: ../templates/admin-metabox.php:52
+#: ../templates/admin-metabox.php:67
 msgid "Publish date"
 msgstr "Publicerat datum"

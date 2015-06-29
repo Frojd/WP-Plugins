@@ -8,27 +8,42 @@
 
     <div class="articles articles-selected">
         <input type="hidden" name="frojd_segments_metaboxes[]" value="<?php echo $metabox; ?>">
-        <input type="hidden" class="articles-options-field" name="frojd_segments_metabox_<?php echo $metabox; ?>" value="<?php echo htmlentities($options); ?>">
+        <input type="hidden" class="articles-data-field" name="frojd_segments_metabox_<?php echo $metabox; ?>" value="<?php echo htmlentities($data); ?>">
         <?php if(!empty($availableArticles)) : ?>
             <ul class="sortable" data-parent-post-id="<?php echo $postId; ?>">
                 <?php foreach ($currentArticles as $article) : ?>
                     <?php 
                         $postStatus = get_post_status($article->post_id);
-                        $postFormat = get_post_format($article->post_id);
+                        $attr = '';
+                        if(isset($article->options)) {
+                            $attr .= ' data-options="' . htmlentities(json_encode($article->options)) . '"';
+                        }
+
+                        foreach($options as $option => $selectors) {
+                            $selected = isset($article->options->$option) ? $article->options->$option : '';
+                            if(isset($selectors['type']) && $selectors['type'] == 'checkbox') {
+                                $selected = isset($article->options->$option) ? $selected : (isset($selectors['checked']) && $selectors['checked'] ? 'on' : '');
+                            }
+                            if(!empty($selected)) {
+                                $attr .= ' data-' . $option . '="' . $selected . '"';
+                            }
+                        }
                     ?>
                     <?php if($postStatus) : ?>
-                        <li data-post-id="<?php echo $article->post_id; ?>">
+                        <li class="segment-item" title="<?php echo get_the_title($article->post_id); ?>" data-post-id="<?php echo $article->post_id; ?>"<?php echo $attr; ?>>
                             <header>
-                                <?php if(!empty($postFormat)) : ?>
-                                    <span class="post-state-format post-format-icon post-format-<?php echo $postFormat; ?>"></span>
-                                <?php endif; ?>
-                                <?php echo get_the_title($article->post_id); ?>
-                                <?php if($postStatus == 'trash') : ?>
-                                    <span class="post-notice">(<?php _e('Notice: This post has been moved to the trash!'); ?>)</span>
-                                    <a class="edit" href="edit.php?post_status=trash&post_type=post" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
-                                <?php else : ?>
-                                    <a class="edit" href="post.php?post=<?php echo $article->post_id; ?>&action=edit" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
-                                <?php endif; ?>
+                                <?php 
+                                    do_action('frojd_segments_article_show_drag_content', $article->post_id);
+
+                                    if(!empty($options)) {
+                                        $vars = array(
+                                            'metabox'   => $metabox,
+                                            'article'   => $article,
+                                            'options'   => $options
+                                        );
+                                        $this->renderTemplate('admin-metabox-options', $vars);
+                                    }
+                                ?>
                             </header>
                         </li>
                     <?php endif; ?>
@@ -60,6 +75,26 @@
 
             <ul class="draggable">
                 <!-- This list is filled by the json above through create_list_from_json in admin.js in this plugin -->
+                <li class="empty">
+                    <header>
+                        <div class="post-state-format" style="display: none"></div>
+                        
+                        <div class="post-title" title=""></div>
+
+                        <a class="edit dashicons dashicons-edit" href="post.php?action=edit" title="<?php _e('Edit', $this->translationDomain); ?>" alt="<?php _e('Edit', $this->translationDomain); ?>"></a>
+
+                        <?php
+                            if(!empty($options)) {
+                                $vars = array(
+                                    'metabox'   => $metabox,
+                                    'article'   => array(),
+                                    'options'   => $options
+                                );
+                                $this->renderTemplate('admin-metabox-options', $vars);
+                            }
+                        ?>
+                    </header>
+                </li>
             </ul>
         </div>
     <?php endif; ?>
