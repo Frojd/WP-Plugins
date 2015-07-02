@@ -1,3 +1,6 @@
 [submodule "Frojd-Segments"]
 	path = Frojd-Segments
 	url = git://github.com/Frojd/Frojd-Segments.git
+[submodule "Frojd-Image-Menu"]
+	path = Frojd-Image-Menu
+	url = git://github.com/Frojd/Frojd-Image-Menu.git
