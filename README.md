@@ -29,6 +29,9 @@ Plugin to handle segment metaboxes where the editor can drag'n'drop articles fro
 ### [Fröjd - Image Menu](https://github.com/Frojd/WP-Plugins/tree/master/frojd-image-menu)
 This plugin allows you to associate images to menu items.
 
+### [Fröjd - OpCache](https://github.com/Frojd/WP-Plugins/tree/master/frojd-opcache)
+Adds a settings page to tools in admin menu with option to reset OpCache
+
 ## Contributing
 To contribute, create a pull request with your plugin and a description to what it does.
 
